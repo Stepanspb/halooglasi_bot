@@ -15,5 +15,8 @@ class Apartment(
     val price: String? = null
 ) {
 
+    override fun toString(): String {
+        return "Apartment(id=$id, uid=$uid, relativeUrl=$relativeUrl, title=$title, price=$price)"
+    }
 }
 
