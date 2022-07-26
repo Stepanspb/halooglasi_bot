@@ -29,9 +29,6 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Testcontainers
 class BaseTest {
 
-    @MockBean
-    protected lateinit var notifier: Notifier
-
     @Autowired
     protected lateinit var apartmentRepository: ApartmentRepository
 

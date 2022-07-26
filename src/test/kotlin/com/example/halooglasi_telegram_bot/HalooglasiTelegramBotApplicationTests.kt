@@ -4,21 +4,27 @@ import com.example.halooglasi_telegram_bot.BaseTest.MockitoHelper.anyObject
 import com.example.halooglasi_telegram_bot.answers.Answer
 import com.example.halooglasi_telegram_bot.answers.Answer2
 import com.example.halooglasi_telegram_bot.loader.ApartmentLoader
+import com.example.halooglasi_telegram_bot.notifier.Notifier
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.mock.mockito.MockBean
 
 @WireMockTest(httpPort = 8080)
 class HalooglasiTelegramBotApplicationTests : BaseTest() {
 
+    @MockBean
+    protected lateinit var notifier: Notifier
+
     @Autowired
-    lateinit var objectMapper : ObjectMapper
+    lateinit var objectMapper: ObjectMapper
 
     @Autowired
     lateinit var apartmentLoader: ApartmentLoader
+
 
     @Test
     internal fun apartmentLoaderTest() {
@@ -50,15 +56,16 @@ class HalooglasiTelegramBotApplicationTests : BaseTest() {
         verify(notifier, times(21)).notify(anyObject())
     }
 
-
-    fun stubHaloOglasiResponse(answer : String) {
+    fun stubHaloOglasiResponse(answer: String) {
         stubFor(
             get(urlPathMatching("/nekretnine.*"))
-            .willReturn(
-                aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", "text/html")
-                .withBody(answer)));
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/html")
+                        .withBody(answer)
+                )
+        );
     }
 
 
