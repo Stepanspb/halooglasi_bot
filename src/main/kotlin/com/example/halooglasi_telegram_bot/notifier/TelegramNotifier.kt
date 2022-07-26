@@ -22,7 +22,7 @@ class TelegramNotifier(
     private fun createMessage(apartment: Apartment) : String {
         val builder = StringBuilder()
         apartment.title?.let { builder.append(it).append("%0A") }
-        apartment.price?.let { builder.append(it).append(" euro.%0A") }
+        apartment.price?.let { builder.append(it).append(" euro. %0A") }
         apartment.relativeUrl?.let { builder.append(halooglasiPath).append(it) }
         return builder.toString()
     }
