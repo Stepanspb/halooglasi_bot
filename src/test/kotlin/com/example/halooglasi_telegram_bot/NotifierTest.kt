@@ -20,7 +20,7 @@ class NotifierTest : BaseTest() {
     lateinit var restTemplate : RestTemplate
 
     @Test
-    internal fun name() {
+    internal fun telegramMessageTest() {
         val message = "https://api.telegram.org/bot5576721520:AAGln1-ifrueVgdCdKI8XTqcOThxEPRxsQ0/sendMessage?chat_id=@appartments_halo&text=title%0A400 euro.%0Ahttps://www.halooglasi.com/relativeUrl"
 
         val apartment = Apartment(uid = 123, relativeUrl = "/relativeUrl",
