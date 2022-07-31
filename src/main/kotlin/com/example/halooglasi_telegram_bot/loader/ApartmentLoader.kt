@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.util.logging.Logger
 
 @Service
 class ApartmentLoader(
@@ -24,17 +23,17 @@ class ApartmentLoader(
 
     @Scheduled(initialDelayString = "\${halooglasi.initialDelay}", fixedDelayString = "\${halooglasi.delay}")
     fun loadWithNotify() {
-        process(true)
+        process(true, 20)
     }
 
     fun loadWithoutNotify() {
-        process(false)
+        process(false, 100)
     }
 
 
-    private fun process(notifyEnabled: Boolean){
+    private fun process(notifyEnabled: Boolean, pageCounts: Int){
         try {
-            for (page in 1..10) {
+            for (page in 1..pageCounts) {
                 val connection = Jsoup.connect(String.format(requestUrl, page))
                 val doc = connection.get()
                 val htmlString = doc.select("div[id=ad-list-2]").select("script").get(0).html()
