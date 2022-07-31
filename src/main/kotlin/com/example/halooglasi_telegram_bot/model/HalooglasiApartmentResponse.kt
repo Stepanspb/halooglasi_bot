@@ -2,7 +2,7 @@ package com.example.halooglasi_telegram_bot.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class ApartmentResponse(
+data class HalooglasiApartmentResponse(
     @JsonProperty("Ads")
     val appartments: List<ApartmentDto>,
     @JsonProperty("TotalCount")
