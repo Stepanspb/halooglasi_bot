@@ -41,6 +41,7 @@ class ApartmentLoader(
                     .substringBefore(";var ")
                 val apartments = objectMapper.readValue(json, ApartmentResponse::class.java)
                 processApartments(apartments, notifyEnabled)
+                Thread.sleep(5000)
             }
         } catch (e: Exception) {
             logger.error(e.message, e)
