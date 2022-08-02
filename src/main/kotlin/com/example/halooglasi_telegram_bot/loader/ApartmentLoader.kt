@@ -23,7 +23,7 @@ class ApartmentLoader(
 
     @Scheduled(initialDelayString = "\${halooglasi.initialDelay}", fixedDelayString = "\${halooglasi.delay}")
     fun loadWithNotify() {
-        process(true, 10)
+        process(true, 20)
     }
 
     fun loadWithoutNotify() {
