@@ -7,7 +7,7 @@ services:
         restart: always
         environment:
             - MONGO_INITDB_ROOT_USERNAME=step4ik
-            - MONGO_INITDB_ROOT_PASSWORD=11123654Aa
+            - MONGO_INITDB_ROOT_PASSWORD=cA638[L4S10I
             - MONGO_INITDB_DATABASE=apartments
         ports:
             - 27017:27017
