@@ -2,6 +2,7 @@ package com.example.halooglasi_telegram_bot.loader
 
 import com.example.halooglasi_telegram_bot.dao.Apartment
 import com.example.halooglasi_telegram_bot.dao.ApartmentRepository
+import com.example.halooglasi_telegram_bot.dao.PriceHistory
 import com.example.halooglasi_telegram_bot.model.ApartmentResponse
 import com.example.halooglasi_telegram_bot.model.TooManyRequestsError
 import com.example.halooglasi_telegram_bot.notifier.Notifier
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException.TooManyRequests
+import java.time.LocalDateTime
 
 @Service
 class ApartmentLoader(
@@ -42,6 +44,7 @@ class ApartmentLoader(
                 val json = htmlString.substringAfter("QuidditaEnvironment.serverListData=")
                     .substringBefore(";var ")
                 val apartments = objectMapper.readValue(json, ApartmentResponse::class.java)
+                //Jsoup.parse(apartments.appartments[0].listHTML!!).select("root") вот тут надо пошаманить
                 processApartments(apartments, notifyEnabled)
                 Thread.sleep(5000)
             }
@@ -60,19 +63,40 @@ class ApartmentLoader(
                         uid = it.id,
                         relativeUrl = it.relativeUrl,
                         title = it.title,
-                        price = it.extractPrice()
+                        price = it.extractPrice(),
+                        priceHistory = mutableListOf(PriceHistory(
+                            price = it.extractPrice()!!,
+                            date = LocalDateTime.now()
+                        )),
+                        footage = it.extractFootage(),
+                        location = it.extractLocation()
                     )
                 )
                 if (notifyEnabled) {
                     sendMessageToTelegram(newApartment)
                 }
+            } else {
+                if (dbApartment.price != it.extractPrice()) {
+                    // add new price to history
+                    dbApartment.priceHistory.add(
+                        PriceHistory(
+                            price = it.extractPrice()!!,
+                            date = LocalDateTime.now()
+                        )
+                    )
+                    dbApartment.price = it.extractPrice()
+                    apartmentRepository.save(dbApartment)
+                    if (notifyEnabled) {
+                        sendMessageToTelegram(apartment = dbApartment, priceWasChanged = true)
+                    }
+                }
             }
         }
     }
 
-    private fun sendMessageToTelegram(apartment: Apartment) {
+    private fun sendMessageToTelegram(apartment: Apartment, priceWasChanged: Boolean = false) {
         try {
-            notifier.notify(apartment)
+            notifier.notify(apartment, priceWasChanged)
             Thread.sleep(5000)
         } catch (ex: TooManyRequests) {
             kotlin.runCatching {
