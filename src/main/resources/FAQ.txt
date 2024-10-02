@@ -4,7 +4,7 @@ docker compose up build -d
 
 проверить что создалась нужная база данных
 
-создать файл в systemd/system
+создать файл в etc/systemd/system
 смотри что я добавил сериал коллектор и указал путь для отдельного файла yaml
 [Unit]
 Description=Manage Java service
